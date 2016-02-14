@@ -1,1 +1,1 @@
-# RxVM: RxJS View Model Framework
+# Reactive Object Framework

@@ -1,0 +1,41 @@
+{
+  "name": "rx-obj",
+  "title": "Reactive Object Framework",
+  "description": "Library for building reactive objects with reactive properties and commands using RxJS",
+  "version": "0.1.0",
+  "homepage": "https://github.com/patsissons/rx-obj",
+  "main": "rx.obj.js",
+  "scripts": {
+    "test": "gulp test",
+    "gulp": "gulp",
+    "webpack": "webpack",
+    "mocha": "mocha",
+    "tsconfig": "tsconfig",
+    "tsc": "tsc",
+    "tsd": "tsd"
+  },
+  "author": "Pat Sissons",
+  "license": "MIT",
+  "dependencies": {
+    "rxjs": "^5.0.0-beta.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^2.0.0",
+    "eslint-config-standard": "^5.1.0",
+    "eslint-plugin-promise": "^1.0.8",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.1",
+    "gulp-mocha": "^2.2.0",
+    "gulp-util": "^3.0.7",
+    "mocha": "^2.4.5",
+    "run-sequence": "^1.1.5",
+    "ts-loader": "^0.8.1",
+    "tsconfig-glob": "^0.4.1",
+    "tslint": "^3.3.0",
+    "typescript": "^1.7.5",
+    "wallaby-webpack": "0.0.13",
+    "webpack": "^1.12.13",
+    "webpack-stream": "^3.1.0"
+  }
+}

@@ -19,6 +19,9 @@
         "../typings/es6-shim/es6-shim.d.ts",
         "../typings/node/node.d.ts",
         "./defines.d.ts",
+        "./Extensions.ts",
+        "./Interfaces.ts",
+        "./ReactiveObject.ts",
         "./rx.obj.ts"
     ]
 }

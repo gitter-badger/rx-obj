@@ -1,5 +1,7 @@
 /build
 /dist
+/gulp-tsc-tmp-*
 /node_modules
 /typings
+/.gulp-tsc-tmp-*.ts
 /npm-debug.log

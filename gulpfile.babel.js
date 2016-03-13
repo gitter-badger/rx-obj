@@ -31,6 +31,7 @@ const config = {
     debug: 'debug',
     release: 'release',
     test: 'test',
+    typings: 'typings',
     watch: 'watch'
   },
   files: {
@@ -82,13 +83,13 @@ Command Line Overrides:
 
 Tasks:
   ${util.colors.cyan('gulp')} will build a ${util.colors.yellow('debug')} bundle, start a webpack development server, and open a browser window
-  ${util.colors.cyan('gulp test')} will build a ${util.colors.yellow('test')} bundle and run mocha against the tests (alias for ${utils.colors.cyan('gulp mocha')})
+  ${util.colors.cyan('gulp test')} will build a ${util.colors.yellow('test')} bundle and run mocha against the tests (alias for ${util.colors.cyan('gulp mocha')})
 
   ${util.colors.cyan('gulp help')} will print this help text
   ${util.colors.cyan('gulp config')} will print the gulp build configuration
 
   ${util.colors.cyan('gulp clean')} will delete all files in ${util.colors.magenta(config.dirs.typings)}, ${util.colors.magenta(config.dirs.build)}, ${util.colors.magenta(config.dirs.dist)}
-       ${['typings', 'build', 'dist', 'all'].map((x) => util.colors.cyan(`clean:${x}`)).join(', ')}
+       ${['typings', 'build', 'lib', 'dist', 'tsc', 'all'].map((x) => util.colors.cyan(`clean:${x}`)).join(', ')}
 
   ${util.colors.cyan('gulp typings')} will install typescript definition files via the typings utility (alias for ${util.colors.cyan('gulp typings:install')})
   ${util.colors.cyan('gulp typings:ensure')} will run ${util.colors.cyan('typings:install')} if ${util.colors.magenta(config.dirs.typings)} is missing
@@ -96,31 +97,24 @@ Tasks:
   ${util.colors.cyan('gulp tsconfig:glob')} will expand ${util.colors.yellow('filesGlob')} in ${util.colors.magenta('tsconfig.json')}
 
   ${util.colors.cyan('gulp webpack')} will build the ${util.colors.yellow('debug')} bundle using webpack (alias for ${util.colors.cyan('gulp webpack:debug')})
-       ${['debug', 'release', 'test', 'all'].map((x) => util.colors.cyan(`webpack:${x}`)).join(', ')}
+       ${['debug', 'release', 'release:min', 'test', 'all'].map((x) => util.colors.cyan(`webpack:${x}`)).join(', ')}
 
   ${util.colors.cyan('gulp mocha')} will build the ${util.colors.yellow('test')} bundle and run mocha against the tests
   ${util.colors.cyan('gulp mocha:run')} will run mocha against the current ${util.colors.yellow('test')} bundle
 
+  ${util.colors.cyan('gulp watch:mocha')} will start webpack in ${util.colors.magenta('watch')} mode, and run all tests after any detected change
+
   ${util.colors.cyan('gulp browser:stats')} will open a browser window to ${util.colors.underline.blue('http://webpack.github.io/analyse/')}
+
+  ${util.colors.cyan('gulp dist')} will deploy release bundles to ${util.colors.magenta(config.dirs.dist)} and deploy ${util.colors.yellow('ES5')} and ${util.colors.yellow('ES6')} modules to ${util.colors.magenta(config.dirs.lib)}
+       ${['typings', 'lib', 'lib:ES5', 'lib:ES6', 'bundle', 'all'].map((x) => util.colors.cyan(`dist:${x}`)).join(', ')}
 `);
-  //   '* ' + util.colors.cyan('gulp watch:mocha') + ' will start webpack in ' + util.colors.magenta('watch') + ' mode, and run all tests after any detected change',
-  //   '* ' + util.colors.cyan('gulp watch:dist') + ' will watch source files for changes and deploy the bundles to ' + util.colors.magenta(config.dirs.dist),
-  //   '  ' + ['debug', 'release'].map(function(x) { return util.colors.cyan('watch:dist:' + x); }).join(', '),
-  //   '',
-  //   '* ' + util.colors.cyan('gulp browser:stats') + ' will open a browser window to ' + util.colors.underline.blue('http://webpack.github.io/analyse/'),
-  //   '',
-  //   '* ' + util.colors.cyan('gulp dist') + ' will copy the bundles to ' + util.colors.magenta(config.dirs.dist),
-  //   '  ' + ['debug', 'release', 'all'].map(function(x) { return util.colors.cyan('dist:' + x); }).join(', '),
-  //   '',
-  //   '* ' + util.colors.cyan('gulp deploy') + ' will build the bundles and copy them to ' + util.colors.magenta(config.dirs.dist),
-  //   '  ' + ['debug', 'release', 'all'].map(function(x) { return util.colors.cyan('deploy:' + x); }).join(', '),
-  //   ''
 });
 
 // Clean Tasks
 
 gulp.task('clean', ['clean:all']);
-gulp.task('clean:all', ['clean:typings', 'clean:build', 'clean:lib', 'clean:dist']);
+gulp.task('clean:all', ['clean:typings', 'clean:build', 'clean:lib', 'clean:dist', 'clean:tsc']);
 
 gulp.task('clean:typings', () => {
   log('Cleaning', util.colors.magenta(config.dirs.typings));
@@ -180,6 +174,15 @@ gulp.task('clean:dist', () => {
     .src(config.dirs.dist, { read: false })
     .pipe(clean({ force }));
 });
+
+gulp.task('clean:tsc', () => {
+  return gulp
+    .src([
+      path.join(__dirname, 'gulp-tsc-tmp-*'),
+      path.join(__dirname, '.gulp-tsc-tmp-*.ts')
+    ], { read: false })
+    .pipe(clean());
+})
 
 // typings Tasks
 
@@ -256,28 +259,33 @@ gulp.task('lint:ts', () => {
 
 // webpack Functions
 
-function getWebpackConfig(build) {
+function getWebpackConfig(build, uglify) {
   var webpackConfig = require(path.join(__dirname, build === config.builds.test ? build : '', config.files.webpack));
 
   if (build === config.builds.debug) {
     webpackConfig.plugins[0].definitions.DEBUG = true;
     webpackConfig.debug = true;
   } else if (build === config.builds.release) {
-    webpackConfig.output.filename = util.replaceExtension(webpackConfig.output.filename, '.min.js');
+    if (uglify === true) {
+      webpackConfig.output.filename = util.replaceExtension(webpackConfig.output.filename, '.min.js');
+    }
     webpackConfig.plugins[0].definitions.RELEASE = true;
     webpackConfig.plugins[0].definitions['process.env'] = {
       'NODE_ENV': JSON.stringify('production')
     };
-    webpackConfig.plugins.push(
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.UglifyJsPlugin({
-        minimize: true,
-        comments: false,
-        compress: {
-          warnings: false
-        }
-      })
-    );
+    webpackConfig.plugins.push(new webpack.optimize.DedupePlugin());
+
+    if (uglify) {
+      webpackConfig.plugins.push(
+        new webpack.optimize.UglifyJsPlugin({
+          minimize: true,
+          comments: false,
+          compress: {
+            warnings: false
+          }
+        })
+      );
+    }
   }
 
   return webpackConfig;
@@ -368,6 +376,10 @@ gulp.task('webpack:release', ['tsconfig:glob'], () => {
   return webpackBuild(config.builds.release, getWebpackConfig(config.builds.release));
 });
 
+gulp.task('webpack:release:min', ['tsconfig:glob'], () => {
+  return webpackBuild(config.builds.release, getWebpackConfig(config.builds.release, true));
+});
+
 gulp.task('webpack:test', ['tsconfig:glob'], () => {
   return webpackBuild(config.builds.test, getWebpackConfig(config.builds.test));
 });
@@ -439,24 +451,47 @@ gulp.task('watch:dist:release', [], function() {
 });
 */
 
+// browser Tasks
+
 gulp.task('browser:stats', () => {
   return gulp
     .src('')
     .pipe(open({ uri: 'http://webpack.github.io/analyse/' }));
 });
 
+// dist Tasks
+
 gulp.task('dist', ['dist:all']);
 gulp.task('dist:all', ['dist:lib', 'dist:bundle']);
-gulp.task('dist:lib', ['dist:lib:ES5']);
+gulp.task('dist:lib', ['dist:lib:ES5', 'dist:lib:ES6']);
 
-gulp.task('dist:lib:ES5', ['clean:lib:ES5'], () => {
+gulp.task('dist:typings', ['clean:build', 'tsconfig:glob'], () => {
   return gulp
     .src([
-      path.join(config.dirs.typings, 'main.d.ts'),
+      path.join(config.dirs.typings, 'main', 'ambient', 'es6-shim', 'index.d.ts'),
+      path.join(config.dirs.typings, 'main', 'ambient', 'webpack-defines', 'index.d.ts'),
+      path.join(config.dirs.typings, 'main', 'definitions', 'rxjs', 'index.d.ts'),
       path.join(config.dirs.src, '**', '*.ts')
     ])
     .pipe(tsc({
-      // tmpDir: path.join(config.dirs.build, 'tmp'),
+      target: 'ES5',
+      sourceMap: true,
+      module: 'system',
+      declaration: true,
+      out: 'rx.obj.js'
+    }))
+    .pipe(gulp.dest(path.join(config.dirs.build, config.builds.typings)));
+})
+
+gulp.task('dist:lib:ES5', ['clean:lib:ES5', 'tsconfig:glob'], () => {
+  return gulp
+    .src([
+      path.join(config.dirs.typings, 'main', 'ambient', 'es6-shim', 'index.d.ts'),
+      path.join(config.dirs.typings, 'main', 'ambient', 'webpack-defines', 'index.d.ts'),
+      path.join(config.dirs.typings, 'main', 'definitions', 'rxjs', 'index.d.ts'),
+      path.join(config.dirs.src, '**', '*.ts')
+    ])
+    .pipe(tsc({
       target: 'ES5',
       sourceMap: true,
       module: 'commonjs',
@@ -465,14 +500,14 @@ gulp.task('dist:lib:ES5', ['clean:lib:ES5'], () => {
     .pipe(gulp.dest(path.join(config.dirs.lib, 'ES5')));
 });
 
-gulp.task('dist:lib:ES6', ['clean:lib:ES6'], () => {
+gulp.task('dist:lib:ES6', ['clean:lib:ES6', 'tsconfig:glob'], () => {
   return gulp
     .src([
-      path.join(config.dirs.typings, 'main.d.ts'),
+      path.join(config.dirs.typings, 'main', 'ambient', 'webpack-defines', 'index.d.ts'),
+      path.join(config.dirs.typings, 'main', 'definitions', 'rxjs', 'index.d.ts'),
       path.join(config.dirs.src, '**', '*.ts')
     ])
     .pipe(tsc({
-      // tmpDir: path.join(config.dirs.build, 'tmp'),
       target: 'ES6',
       sourceMap: true,
       module: 'es2015',
@@ -481,8 +516,15 @@ gulp.task('dist:lib:ES6', ['clean:lib:ES6'], () => {
     .pipe(gulp.dest(path.join(config.dirs.lib, 'ES6')));
 });
 
-gulp.task('dist:bundle', ['clean:dist', 'webpack:release'], () => {
-  return gulp
-    .src(path.join(config.dirs.build, config.builds.release, '**', '*'), { read: false })
-    .pipe(gulp.dest(config.dirs.dist));
+gulp.task('dist:bundle', ['clean:dist'], (done) => {
+  runSequence('dist:typings', 'webpack:release', 'webpack:release:min', () => {
+    gulp
+      .src([
+        path.join(config.dirs.build, config.builds.release, '**', '*'),
+        path.join(config.dirs.build, config.builds.typings, '*.d.ts')
+      ])
+      .pipe(gulp.dest(config.dirs.dist));
+
+    done();
+  })
 });

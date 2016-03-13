@@ -2,9 +2,11 @@
 
 import './Extensions';
 
-import { Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { Scheduler } from 'rxjs/Scheduler';
 
-import { IReactiveObject, IReactivePropertyChangedEventArgs } from './Interfaces';
+import { IReactiveObject, IReactiveProperty, IReactiveCommand, IReactivePropertyChangedEventArgs } from './Interfaces';
+import { ReactiveProperty } from './ReactiveProperty';
 
 export class ReactiveObject extends Object implements IReactiveObject {
   private changingSubject = new Subject<IReactivePropertyChangedEventArgs<IReactiveObject>>();
@@ -25,6 +27,18 @@ export class ReactiveObject extends Object implements IReactiveObject {
     let sub = new Subscription();
     let x: Object;
     return sub;
+  }
+
+  property<T>(initialValue?: T, scheduler?: Scheduler): IReactiveProperty<T> {
+    let prop = new ReactiveProperty(initialValue);
+
+    return prop;
+  }
+
+  command<TRet, TParam>(execute: (x: TParam) => Observable<TRet>, canExecute: Observable<boolean>): IReactiveCommand<TRet> {
+    let cmd: IReactiveCommand<TRet> = null;
+
+    return cmd;
   }
 };
 

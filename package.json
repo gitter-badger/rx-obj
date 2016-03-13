@@ -1,10 +1,23 @@
 {
   "name": "rx-obj",
+  "version": "0.1.0",
   "title": "Reactive Object Framework",
   "description": "Library for building reactive objects with reactive properties and commands using RxJS",
-  "version": "0.1.0",
-  "homepage": "https://github.com/patsissons/rx-obj",
-  "main": "rx.obj.js",
+  "keywords": [
+    "reactive",
+    "rx",
+    "rxjs"
+  ],
+  "author": "Pat Sissons <patricksissons@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patsissons/rx-obj.git"
+  },
+  "bugs": {
+    "url": "https://github.com/webschik/postcss-less/issues"
+  },
+  "homepage": "https://github.com/patsissons/rx-obj#readme",
   "scripts": {
     "test": "gulp test",
     "gulp": "gulp",
@@ -12,30 +25,38 @@
     "mocha": "mocha",
     "tsconfig": "tsconfig",
     "tsc": "tsc",
-    "tsd": "tsd"
+    "typings": "typings"
   },
-  "author": "Pat Sissons",
-  "license": "MIT",
   "dependencies": {
-    "rxjs": "^5.0.0-beta.2"
+    "rxjs": "^5.0.0-beta.2",
+    "es6-shim": "^0.35.0"
   },
   "devDependencies": {
+    "babel-core": "^6.7.2",
+    "babel-preset-es2015": "^6.6.0",
     "chai": "^3.5.0",
-    "eslint": "^2.0.0",
-    "eslint-config-standard": "^5.1.0",
-    "eslint-plugin-promise": "^1.0.8",
+    "eslint": "^2.4.0",
     "gulp": "^3.9.1",
-    "gulp-clean": "^0.3.1",
+    "gulp-eslint": "^2.0.0",
     "gulp-mocha": "^2.2.0",
+    "gulp-open": "^1.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-rimraf": "^0.2.0",
+    "gulp-tslint": "^4.3.3",
+    "gulp-typings": "^1.1.0",
+    "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.7",
+    "minimist": "^1.2.0",
     "mocha": "^2.4.5",
     "run-sequence": "^1.1.5",
+    "through": "^2.3.8",
     "ts-loader": "^0.8.1",
     "tsconfig-glob": "^0.4.1",
-    "tslint": "^3.3.0",
-    "typescript": "^1.7.5",
-    "wallaby-webpack": "0.0.13",
-    "webpack": "^1.12.13",
+    "tslint": "^3.6.0",
+    "typescript": "^1.8.7",
+    "typings": "^0.7.8",
+    "wallaby-webpack": "0.0.17",
+    "webpack": "^1.12.14",
     "webpack-stream": "^3.1.0"
   }
 }

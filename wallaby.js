@@ -1,19 +1,22 @@
+/* global  window */
+
+var path = require('path');
 var wallabyWebpack = require('wallaby-webpack');
 
 var webpackConfig = require('./webpack.config');
-webpackConfig.entry = './test/rxvm.ts';
+webpackConfig.entry = path.join(__dirname, 'test', 'rx.obj.ts');
 webpackConfig.output = null;
 
 var wallabyPostprocessor = wallabyWebpack(webpackConfig);
 
-module.exports = function(wallaby) {
+module.exports = function() {
   return {
     files: [
       { pattern: 'src/**/*.ts', load: false }
     ],
 
     tests: [
-      { pattern: 'test/**/*Spec.ts', load: false }
+      { pattern: 'test/**/*.spec.ts', load: false }
     ],
 
     testFramework: 'mocha',

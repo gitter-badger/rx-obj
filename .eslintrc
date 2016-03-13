@@ -1,0 +1,20 @@
+{
+  "env": {
+    "commonjs": true,
+    "mocha": true,
+    "node": true
+  },
+
+  "parserOptions": {
+    // "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+
+  "extends": "eslint:recommended",
+
+  "rules": {
+    "semi": [2, "always"],
+    "semi-spacing": [2, {"before": false, "after": true}],
+    "quotes": [2, "single", "avoid-escape"]
+  }
+}

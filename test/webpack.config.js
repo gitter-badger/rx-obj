@@ -4,17 +4,17 @@ var webpack = require('webpack');
 var defines = {
   DEBUG: false,
   RELEASE: false,
-  TEST: false,
+  TEST: true,
   WEBPACK_DEV_SERVER: false
 };
 
 module.exports = {
   entry: [
-    path.join(__dirname, 'src', 'rx.obj.ts')
+    path.join(__dirname, 'rx.obj.tests.ts')
   ],
   output: {
-    path: path.join(__dirname, 'build'),
-    filename: 'rx.obj.js'
+    path: path.join(__dirname, '..', 'build', 'test'),
+    filename: 'rx.obj.tests.js'
   },
   externals: {
   },

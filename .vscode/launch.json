@@ -1,5 +1,5 @@
 {
-	"version": "0.2.0",
+	"version": "0.1.0",
 	"configurations": [
 		{
 			"name": "Mocha",
@@ -7,7 +7,26 @@
 			"request": "launch",
 			"program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
 			"stopOnEntry": false,
-			"args": ["${workspaceRoot}/build/test/rx.obj.js"],
+			"args": ["${workspaceRoot}/build/test/rx.obj.tests.js"],
+			"cwd": "${workspaceRoot}",
+			"runtimeExecutable": null,
+			"runtimeArgs": [
+				"--nolazy"
+			],
+			"env": {
+				"NODE_ENV": "development"
+			},
+			"externalConsole": false,
+			"sourceMaps": false,
+			"outDir": null
+		},
+    {
+			"name": "Gulp",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
+			"stopOnEntry": false,
+			"args": ["typings:install"],
 			"cwd": "${workspaceRoot}",
 			"runtimeExecutable": null,
 			"runtimeArgs": [

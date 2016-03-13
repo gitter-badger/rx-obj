@@ -1,3 +1,5 @@
-build/**/*
 .vscode/
-typings/**/*
+build/
+node_modules/
+typings/
+package.json

@@ -1,10 +1,16 @@
 {
   "name": "rx-obj",
   "version": false,
-  "dependencies": {},
+  "dependencies": {
+    "rxjs": "npm:rxjs"
+  },
   "ambientDevDependencies": {
     "chai": "registry:dt/chai#3.4.0+20160216071402",
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160215162030",
     "mocha": "registry:dt/mocha#2.2.5+20151023103246",
-    "node": "registry:dt/node#4.0.0+20160311162451"
+    "node": "registry:dt/node#4.0.0+20160311162451",
+    "typemoq": "npm:typemoq/typemoq.d.ts",
+    "typemoq-node": "npm:typemoq/typemoq.node.d.ts",
+    "webpack-defines": "file:./src/typings/webpack-defines/webpack-defines.d.ts"
   }
 }

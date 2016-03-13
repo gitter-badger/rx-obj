@@ -11,28 +11,33 @@ describe('ReactiveProperty', () => {
 
     expect(prop).to.be.not.null;
   });
+
   it('can create a property with an initial value', () => {
     let prop = new ReactiveProperty('test');
 
     expect(prop).to.be.not.null;
     expect(prop.value).to.equal('test');
   });
+
   it('can set a new value', () => {
     let prop = new ReactiveProperty();
     prop.value = 'test';
 
     expect(prop.value).to.equal('test');
   });
+
   it('can return a changing observable', () => {
     let prop = new ReactiveProperty();
 
     expect(prop.changing).to.be.not.null;
   });
+
   it('can return a changed observable', () => {
     let prop = new ReactiveProperty();
 
     expect(prop.changed).to.be.not.null;
   });
+
   it('can emit a change before it is written', (done) => {
     let prop = new ReactiveProperty('test1');
 
@@ -47,6 +52,7 @@ describe('ReactiveProperty', () => {
 
     prop.value = 'test2';
   });
+
   it('can emit a change after it is written', (done) => {
     let prop = new ReactiveProperty('test1');
 
@@ -73,6 +79,7 @@ describe('ReactiveOutputProperty', () => {
 
     prop.unsubscribe();
   });
+
   it('can create an output property with an initial value', () => {
     let source = Observable.never();
     let prop = new ReactiveOutputProperty(source, 'test');
@@ -82,6 +89,7 @@ describe('ReactiveOutputProperty', () => {
 
     prop.unsubscribe();
   });
+
   it('fails setting a new value', () => {
     let source = Observable.never();
     let prop = new ReactiveOutputProperty(source);
@@ -90,6 +98,7 @@ describe('ReactiveOutputProperty', () => {
 
     prop.unsubscribe();
   });
+
   it('can return a changing observable', () => {
     let source = Observable.never();
     let prop = new ReactiveOutputProperty(source);
@@ -98,6 +107,7 @@ describe('ReactiveOutputProperty', () => {
 
     prop.unsubscribe();
   });
+
   it('can return a changed observable', () => {
     let source = Observable.never();
     let prop = new ReactiveOutputProperty(source);
@@ -106,6 +116,7 @@ describe('ReactiveOutputProperty', () => {
 
     prop.unsubscribe();
   });
+
   it('can connect to the source', () => {
     let source = Observable.never();
     let prop = new ReactiveOutputProperty(source);
@@ -117,6 +128,7 @@ describe('ReactiveOutputProperty', () => {
 
     prop.unsubscribe();
   });
+
   it('will connect to the source only once', () => {
     let source = Observable.never();
     let prop = new ReactiveOutputProperty(source);
@@ -128,6 +140,7 @@ describe('ReactiveOutputProperty', () => {
 
     prop.unsubscribe();
   });
+
   it('can unsubscribe from the source', () => {
     let source = Observable.never();
     let prop = new ReactiveOutputProperty(source);
@@ -138,6 +151,7 @@ describe('ReactiveOutputProperty', () => {
 
     expect(sub.isUnsubscribed).to.be.true;
   });
+
   it('can emit a change before it is written', (done) => {
     let source = new Subject();
     let prop = new ReactiveOutputProperty(source);
@@ -159,6 +173,7 @@ describe('ReactiveOutputProperty', () => {
 
     source.next('test2');
   });
+
   it('can emit a change after it is written', (done) => {
     let source = new Subject();
     let prop = new ReactiveOutputProperty(source);
@@ -180,6 +195,7 @@ describe('ReactiveOutputProperty', () => {
 
     source.next('test2');
   });
+
   it('can handle errors in the source stream using thrownErrors', (done) => {
     let source = new Subject();
     let prop = new ReactiveOutputProperty(source);
@@ -198,6 +214,7 @@ describe('ReactiveOutputProperty', () => {
 
     source.error('error');
   });
+
   it('can handle errors in the source stream using catchErrors', (done) => {
     let source = new Subject();
     let prop = new ReactiveOutputProperty(source)
@@ -214,6 +231,7 @@ describe('ReactiveOutputProperty', () => {
 
     source.error('error');
   });
+
   it('can unsubscribe from the catchErrors subscription', () => {
     let source = Observable.never();
     let prop = new ReactiveOutputProperty(source)
@@ -225,6 +243,7 @@ describe('ReactiveOutputProperty', () => {
 
     expect(sub.isUnsubscribed).to.be.true;
   });
+
   it('can handle uncaught errors', () => {
     let source = new Subject();
     let prop = new ReactiveOutputProperty(source);

@@ -13,16 +13,15 @@
   ],
   "files": [
     "./typings/main.d.ts",
-    "./src/defines.d.ts",
     "./src/Extensions.ts",
     "./src/Interfaces.ts",
     "./src/ReactiveObject.ts",
     "./src/ReactiveProperty.ts",
     "./src/rx.obj.ts",
     "./src/ScheduledSubject.ts",
-    "./test/ReactiveObjectSpec.ts",
-    "./test/ReactivePropertySpec.ts",
-    "./test/rx.obj.ts",
-    "./test/SanitySpec.ts"
+    "./test/ReactiveObject.spec.ts",
+    "./test/ReactiveProperty.spec.ts",
+    "./test/rx.obj.tests.ts",
+    "./test/Sanity.spec.ts"
   ]
 }

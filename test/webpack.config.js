@@ -1,36 +1,38 @@
-var path = require('path');
-var webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
 
-var defines = {
+const defines = {
   DEBUG: false,
   RELEASE: false,
   TEST: true,
-  WEBPACK_DEV_SERVER: false
+  // we want to specifically use snake case for the defines
+  // eslint-disable-next-line id-match
+  WEBPACK_DEV_SERVER: false,
 };
 
 module.exports = {
   entry: [
-    path.join(__dirname, 'rx.obj.tests.ts')
+    path.join(__dirname, 'rx.obj.tests.ts'),
   ],
   output: {
     path: path.join(__dirname, '..', 'build', 'test'),
-    filename: 'rx.obj.tests.js'
+    filename: 'rx.obj.tests.js',
   },
   externals: {
   },
   devtool: 'sourcemap',
   plugins: [
-    new webpack.DefinePlugin(defines)
+    new webpack.DefinePlugin(defines),
   ],
   module: {
     loaders: [
-      { test: /\.ts$/, loader: 'ts' }
-    ]
+      { test: /\.ts$/, loader: 'ts' },
+    ],
   },
   resolve: {
-    extensions: ['', '.ts', '.webpack.js', '.web.js', '.js'],
+    extensions: [ '', '.ts', '.webpack.js', '.web.js', '.js' ],
     alias: {
-    }
+    },
   },
-  failOnError: true
+  failOnError: true,
 };

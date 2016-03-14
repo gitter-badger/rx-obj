@@ -13,8 +13,8 @@ describe('Sanity Tests', () => {
   describe('for chai', () => {
     it('can expect assertions', () => {
       expect(true).to.be.true;
-    })
-  })
+    });
+  });
 
   describe('for RxJS', () => {
     it('can load the Rx module', () => {
